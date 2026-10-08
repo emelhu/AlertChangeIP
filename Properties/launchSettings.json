@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AlertChangeIP (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "AlertChangeIP (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
