@@ -1,5 +1,6 @@
 using AlertChangeIP.Classes;
 
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 
@@ -15,7 +16,13 @@ namespace AlertChangeIP.Pages
 
         //
 
-        public IList<AppParams.AppMode> appModeEnumsList { get; } = Enum.GetValues(typeof(AppParams.AppMode)).Cast<AppParams.AppMode>().ToList();             
+        public IList<AppParams.AppMode> appModeEnumsList { get; } = Enum.GetValues(typeof(AppParams.AppMode)).Cast<AppParams.AppMode>().ToList();
+
+        public void SetDefaultWebURL(object sender, RoutedEventArgs e)
+        {
+            AppParams.webURL = AppParams.defaultWebURL;
+            this.Bindings.Update();
+        }
     }
 }
 

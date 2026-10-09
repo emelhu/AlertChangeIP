@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Page
-    x:Class="AlertChangeIP.Pages.SettingsPage"
+    x:Class="AlertChangeIP.Pages.SettingsPage"   
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:enums="using:AlertChangeIP.Classes"
+    xmlns:classes="using:AlertChangeIP.Classes"
     xmlns:local="using:AlertChangeIP.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Grid Padding="24,16,24,16" RowSpacing="24">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -26,7 +28,7 @@
                 </Grid.RowDefinitions>
                 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="160" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
@@ -35,9 +37,39 @@
 
                 <ComboBox  Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
                     ItemsSource ="{x:Bind appModeEnumsList}"
-                    SelectedItem="{x:Bind enums:AppParams.appMode, Mode=TwoWay}" /> 
+                    SelectedItem="{x:Bind classes:AppParams.appMode, Mode=TwoWay}" /> 
             </Grid>
         </Border>
         
+        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Padding="6">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Padding="0,7,0,0" Foreground="Blue"
+                    Text="URL of WEB page:" />
+
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
+                    Text="{x:Bind classes:AppParams.webURL, Mode=TwoWay}"
+                    PlaceholderText="URL of WEB page to get public IP address"
+                    AcceptsReturn="False"
+                    TextWrapping="NoWrap"
+                /> 
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="3">
+            <Button  
+                Content="Set default URL"
+                VerticalAlignment="Bottom"
+                Click="SetDefaultWebURL"/>
+        </StackPanel>
+
     </Grid>
 </Page>

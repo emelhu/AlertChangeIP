@@ -6,13 +6,17 @@ namespace AlertChangeIP.Classes
 {
     public static class IPService
     {
+        /// <summary>
+        /// Gets the public IP address of the machine by making a request to an external service. Exception if not successful.
+        /// </summary>
+        /// <returns>The public IP address as a string.</returns>
         public static string GetPublicIP()
         {
             using (var client = new HttpClient())
             {
                 try
                 {
-                    return client.GetStringAsync("https://api.ipify.org").Result;
+                    return client.GetStringAsync(AppParams.webURL).Result;
                 }
                 catch (Exception ex)
                 {
