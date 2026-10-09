@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AlertChangeIP.Classes
 {
-    public static class LoggingService
+    public static class LoggingService 
     {
         public static string logFileName => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IPChangeLog.txt");
 

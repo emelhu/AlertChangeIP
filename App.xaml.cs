@@ -54,7 +54,7 @@ namespace AlertChangeIP
                 }
             }
 
-            AppParams.appMode = appMode;
+            AppParams.appModeDefault = appMode;
 
             if (parameters.Length < 1)                                                                                                          // Elvileg ilyen nem lehetséges, de ha mégis, akkor logoljuk az esetet
             {

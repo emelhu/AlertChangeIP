@@ -10,8 +10,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Page.Resources>
+
     <Grid Padding="24,16,24,16" RowSpacing="24">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -37,7 +42,7 @@
 
                 <ComboBox  Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
                     ItemsSource ="{x:Bind appModeEnumsList}"
-                    SelectedItem="{x:Bind classes:AppParams.appMode, Mode=TwoWay}" /> 
+                    SelectedItem="{x:Bind appParams.appMode, Mode=TwoWay}" /> 
             </Grid>
         </Border>
         
@@ -55,8 +60,8 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" Padding="0,7,0,0" Foreground="Blue"
                     Text="URL of WEB page:" />
 
-                <TextBox Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
-                    Text="{x:Bind classes:AppParams.webURL, Mode=TwoWay}"
+                <local:LiveTextBox Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
+                    Text="{x:Bind appParams.webURL, Mode=TwoWay}"
                     PlaceholderText="URL of WEB page to get public IP address"
                     AcceptsReturn="False"
                     TextWrapping="NoWrap"
@@ -64,11 +69,25 @@
             </Grid>
         </Border>
 
-        <StackPanel Grid.Row="3">
-            <Button  
-                Content="Set default URL"
-                VerticalAlignment="Bottom"
-                Click="SetDefaultWebURL"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" >
+            <Button Content="Set default URL"  Click="SetDefaultWebURL" />
+
+            <Border BorderBrush="Gainsboro" BorderThickness="1" Margin="12,0,0,0" Padding="8,0,0,0" >
+                <CheckBox Content="URL list" IsChecked="{x:Bind showURLList, Mode=TwoWay}" x:Name="urlListCheckBox" />
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Orientation="Vertical" >
+            <Border BorderBrush="Gray" BorderThickness="2" Padding="4" Visibility="{x:Bind showURLList, Converter={StaticResource BoolToVisibilityConverter}}">
+                <ListView ItemsSource="{x:Bind classes:AppParams.webURLList}"
+                    SelectedItem="{x:Bind appParams.webURL, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <TextBlock Text="{x:Bind}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Border>
         </StackPanel>
 
     </Grid>

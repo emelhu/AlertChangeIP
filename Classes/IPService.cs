@@ -14,9 +14,11 @@ namespace AlertChangeIP.Classes
         {
             using (var client = new HttpClient())
             {
+                AppParams appParams = new AppParams();
+
                 try
                 {
-                    return client.GetStringAsync(AppParams.webURL).Result;
+                    return client.GetStringAsync(appParams.webURL).Result;
                 }
                 catch (Exception ex)
                 {

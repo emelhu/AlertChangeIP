@@ -20,8 +20,19 @@ namespace AlertChangeIP
             SetTitleBar(AppTitleBar);
             AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
             AppWindow.SetIcon("Assets/AppIcon.ico");
+
+            this.Closed += OnClosed;
+
+            WindowStateStorage.Restore(AppWindow);                                                                                              // Restore the window state when the window is opened   
         }
 
+        private void OnClosed(object sender, WindowEventArgs e)
+        {
+            WindowStateStorage.Save(AppWindow);                                                                                                 // Save the window state when the window is closed                    
+        }
+
+
+        #region Title Bar
         private void TitleBar_PaneToggleRequested(TitleBar sender, object args)
         {
             NavView.IsPaneOpen = !NavView.IsPaneOpen;
@@ -31,10 +42,14 @@ namespace AlertChangeIP
         {
             NavFrame.GoBack();
         }
+        #endregion
 
+        #region Navigation 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            if (AppParams.appMode == AppParams.AppMode.Ask)
+            AppParams appParams = new AppParams();
+
+            if (appParams.appMode == AppParams.AppMode.Ask)
             {
                 NavFrame.Navigate(typeof(SettingsPage));
             }
@@ -57,5 +72,6 @@ namespace AlertChangeIP
                 }
             }
         }
+        #endregion
     }
 }
