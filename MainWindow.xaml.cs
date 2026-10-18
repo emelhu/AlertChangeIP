@@ -47,9 +47,9 @@ namespace AlertChangeIP
         #region Navigation 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            AppParams appParams = new AppParams();
+            AppParams appParams = AppParams.Instance;
 
-            if (appParams.appMode == AppParams.AppMode.Ask)
+            if (appParams.AppMode == AppParams.AppModeEnum.Ask)
             {
                 NavFrame.Navigate(typeof(SettingsPage));
             }

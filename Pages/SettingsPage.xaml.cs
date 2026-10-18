@@ -11,28 +11,15 @@ namespace AlertChangeIP.Pages
 {
     public sealed partial class SettingsPage : Page
     {
+        internal AppParamsVM ViewModel { get; }
+
         public SettingsPage()
         {
             InitializeComponent();
+
+            this.ViewModel   = new AppParamsVM(AppParams.Instance);
+            this.DataContext = this.ViewModel;
         }
-
-        AppParams appParams = new();
-
-        //
-
-        public IList<AppParams.AppMode> appModeEnumsList { get; } = Enum.GetValues(typeof(AppParams.AppMode)).Cast<AppParams.AppMode>().ToList();
-
-        public async void SetDefaultWebURL(object sender, RoutedEventArgs e)
-        {
-            await FocusManager.TryFocusAsync(urlListCheckBox, FocusState.Programmatic);
-
-            //appParams.webURL = AppParams.defaultWebURL;                                                                                     // old try: this.Bindings.Update();
-
-            appParams.webURLChange(AppParams.defaultWebURL);            
-        }
-
-        private bool showURLList_ = false;
-        public bool showURLList { get { return showURLList_; } set { showURLList_ = value; this.Bindings.Update(); } }
     }
 
     //

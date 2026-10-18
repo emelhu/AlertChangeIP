@@ -38,7 +38,7 @@ namespace AlertChangeIP
         {
             string[] parameters = Environment.GetCommandLineArgs();
 
-            AppParams.AppMode appMode = AppParams.AppMode.Ask;                                                                                  // Alapértelmezett érték
+            AppParams.AppModeEnum appMode = AppParams.AppModeEnum.Ask;                                                                                  // Alapértelmezett érték
 
             if (parameters.Length >= 2)                                                                                                         // Első elem mindig az exe neve → a tényleges paraméter a [1]-ben van
             {
@@ -46,15 +46,15 @@ namespace AlertChangeIP
 
                 if (Enum.TryParse(param1, ignoreCase: true, out appMode))
                 {
-                    LoggingService.WriteLog($"Parsed AppMode parameter value: {appMode}");                                                                              
+                    LoggingService.WriteLog($"Parsed AppModeEnum parameter value: {appMode}");                                                                              
                 }
                 else
                 {
-                    LoggingService.WriteLog($"Invalid AppMode paramerter value: {param1}", LoggingService.LogLevel.Error);
+                    LoggingService.WriteLog($"Invalid AppModeEnum paramerter value: {param1}", LoggingService.LogLevel.Error);
                 }
             }
 
-            AppParams.appModeDefault = appMode;
+            AppParams.AppModeDefault = appMode;
 
             if (parameters.Length < 1)                                                                                                          // Elvileg ilyen nem lehetséges, de ha mégis, akkor logoljuk az esetet
             {
@@ -62,7 +62,7 @@ namespace AlertChangeIP
             }
             else
             { 
-                LoggingService.WriteLog($"{parameters[0]} started with AppMode value: {appMode}");
+                LoggingService.WriteLog($"{parameters[0]} started with AppModeEnum value: {appMode}");
             }
             //
 

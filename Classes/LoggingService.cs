@@ -6,7 +6,7 @@ namespace AlertChangeIP.Classes
 {
     public static class LoggingService 
     {
-        public static string logFileName => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IPChangeLog.txt");
+        public static string logFileName => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"IPChangeLog_{DateTime.Now.ToString("yyyy_MM", System.Globalization.CultureInfo.InvariantCulture)}.txt");
 
         public static void WriteLog(string text, LogLevel level = LogLevel.Info)
         {

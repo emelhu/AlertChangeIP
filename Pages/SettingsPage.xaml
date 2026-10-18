@@ -41,8 +41,8 @@
                     Text="Select App Mode:" />
 
                 <ComboBox  Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
-                    ItemsSource ="{x:Bind appModeEnumsList}"
-                    SelectedItem="{x:Bind appParams.appMode, Mode=TwoWay}" /> 
+                    ItemsSource ="{x:Bind ViewModel.AppModeEnumsList}"
+                    SelectedItem="{x:Bind ViewModel.AppMode, Mode=TwoWay}" /> 
             </Grid>
         </Border>
         
@@ -61,7 +61,7 @@
                     Text="URL of WEB page:" />
 
                 <local:LiveTextBox Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
-                    Text="{x:Bind appParams.webURL, Mode=TwoWay}"
+                    Text="{x:Bind ViewModel.WebURL, Mode=TwoWay}"
                     PlaceholderText="URL of WEB page to get public IP address"
                     AcceptsReturn="False"
                     TextWrapping="NoWrap"
@@ -70,24 +70,25 @@
         </Border>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" >
-            <Button Content="Set default URL"  Click="SetDefaultWebURL" />
-
-            <Border BorderBrush="Gainsboro" BorderThickness="1" Margin="12,0,0,0" Padding="8,0,0,0" >
-                <CheckBox Content="URL list" IsChecked="{x:Bind showURLList, Mode=TwoWay}" x:Name="urlListCheckBox" />
-            </Border>
+            <Button Content="Set default URL"  Command="{x:Bind ViewModel.SetWebURLDefaultCommand}" />
         </StackPanel>
 
-        <StackPanel Grid.Row="4" Orientation="Vertical" >
-            <Border BorderBrush="Gray" BorderThickness="2" Padding="4" Visibility="{x:Bind showURLList, Converter={StaticResource BoolToVisibilityConverter}}">
-                <ListView ItemsSource="{x:Bind classes:AppParams.webURLList}"
-                    SelectedItem="{x:Bind appParams.webURL, Mode=TwoWay}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="x:String">
-                            <TextBlock Text="{x:Bind}"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Border>
+        <StackPanel Grid.Row="5" Orientation="Vertical" >
+            <Expander Header="Select other URL" 
+                  HorizontalAlignment="Stretch"
+                  IsExpanded="{x:Bind ViewModel.ShowURLList, Mode=TwoWay}">
+
+                <Border BorderBrush="Gray" BorderThickness="2" Padding="4" >
+                    <ListView ItemsSource ="{x:Bind ViewModel.WebURLList}"
+                              SelectedItem="{x:Bind ViewModel.WebURL, Mode=TwoWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{x:Bind}"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
+            </Expander>
         </StackPanel>
 
     </Grid>
