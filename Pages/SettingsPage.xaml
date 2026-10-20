@@ -14,82 +14,108 @@
         <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Page.Resources>
 
-    <Grid Padding="24,16,24,16" RowSpacing="24">
+    <Grid  HorizontalAlignment="Stretch" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}" Text="*** Settings Page ***" />
-
         
-        <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Padding="6">   
-            <Grid >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="160" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Row="0" Grid.Column="0" Padding="0,7,0,0" Foreground="Blue"
-                    Text="Select App Mode:" />
-
-                <ComboBox  Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
-                    ItemsSource ="{x:Bind ViewModel.AppModeEnumsList}"
-                    SelectedItem="{x:Bind ViewModel.AppMode, Mode=TwoWay}" /> 
-            </Grid>
-        </Border>
-        
-        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Padding="6">
-            <Grid >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="160" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Row="0" Grid.Column="0" Padding="0,7,0,0" Foreground="Blue"
-                    Text="URL of WEB page:" />
-
-                <local:LiveTextBox Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
-                    Text="{x:Bind ViewModel.WebURL, Mode=TwoWay}"
-                    PlaceholderText="URL of WEB page to get public IP address"
-                    AcceptsReturn="False"
-                    TextWrapping="NoWrap"
-                /> 
-            </Grid>
-        </Border>
-
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" >
-            <Button Content="Set default URL"  Command="{x:Bind ViewModel.SetWebURLDefaultCommand}" />
+        <StackPanel Grid.Row="0" >
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" HorizontalAlignment="Center"
+                       Text="*** Settings Page ***" />
+            <Border Height="1" Background="Gray" Margin="4,4,4,4"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="5" Orientation="Vertical" >
-            <Expander Header="Select other URL" 
-                  HorizontalAlignment="Stretch"
-                  IsExpanded="{x:Bind ViewModel.ShowURLList, Mode=TwoWay}">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid Padding="24,16,24,16" RowSpacing="24" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <Border BorderBrush="Gray" BorderThickness="2" Padding="4" >
-                    <ListView ItemsSource ="{x:Bind ViewModel.WebURLList}"
-                              SelectedItem="{x:Bind ViewModel.WebURL, Mode=TwoWay}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind}"/>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1" Padding="6">
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Padding="0,7,0,0" Foreground="Blue"
+                            Text="Select App Mode:" />
+
+                        <ComboBox  Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
+                            ItemsSource ="{x:Bind ViewModel.AppModeEnumsList}"
+                            SelectedItem="{x:Bind ViewModel.AppMode, Mode=TwoWay}" />
+                    </Grid>
                 </Border>
-            </Expander>
-        </StackPanel>
 
+                <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Padding="6">
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="120" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Padding="0,7,0,0" Foreground="Blue"
+                            Text="URL of WEB page:" />
+
+                        <TextBox Grid.Row="0" Grid.Column="1" Margin="12,0,0,0" Foreground="Brown"
+                            Text="{x:Bind ViewModel.WebURL, Mode=TwoWay}"
+                            PlaceholderText="URL of WEB page to get public IP address"
+                            AcceptsReturn="False"
+                            TextWrapping="NoWrap"
+                        />
+
+                        <Button Grid.Row="0" Grid.Column="2" Content="Set default URL"  Command="{x:Bind ViewModel.SetWebURLDefaultCommand}" />
+                    </Grid>
+                </Border>
+                
+                <Grid Grid.Row="2" HorizontalAlignment="Stretch" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <Expander Grid.Row="0"  Header="Select other URL" 
+                        HorizontalAlignment="Stretch"
+                        IsExpanded="{x:Bind ViewModel.ShowURLList, Mode=TwoWay}">
+
+                        <Border BorderBrush="Gray" BorderThickness="2" Padding="4" >
+                            <ListView Grid.Row="0" ItemsSource ="{x:Bind ViewModel.WebURLList}"
+                                    SelectedItem="{x:Bind ViewModel.WebURL, Mode=TwoWay}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Border>
+                    </Expander>
+
+
+                    <Expander Grid.Row="1" Header="2nd Expander" 
+                    HorizontalAlignment="Stretch"
+                    IsExpanded="{x:Bind ViewModel.Show2ndExpander, Mode=TwoWay}">
+
+                        <Border BorderBrush="Gray" BorderThickness="2" Padding="4" >
+                            <TextBlock 
+                                Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae nunc id magna facilisis pulvinar. Integer non sem vel lacus fermentum tincidunt. Suspendisse potenti. Curabitur euismod, urna at placerat tincidunt, lorem arcu luctus odio, vitae tincidunt velit ipsum non justo. Donec ac nibh nec velit bibendum aliquet. Vivamus id risus ac nulla dictum porttitor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
+                                TextWrapping="Wrap" />
+                        </Border>
+                    </Expander>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>

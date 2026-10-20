@@ -21,12 +21,12 @@ namespace AlertChangeIP.Classes
             Load();  
         }
 
-        public          AppModeEnum     AppMode         = AppModeDefault;
+        public          AppModeEnum     AppMode { get; set; } = AppModeDefault;                                                 // { get; set; } to JasonSerializer
         public static   AppModeEnum     AppModeDefault  = AppModeEnum.Ask;
 
         public const    string          DefaultWebURL = "https://api.ipify.org";
-        public          string          WebURL = DefaultWebURL;
-        
+        public          string          WebURL { get; set; } = DefaultWebURL;                                                   // { get; set; } to JasonSerializer
+
         public enum AppModeEnum
         {
             Ask = 0,
@@ -47,25 +47,39 @@ namespace AlertChangeIP.Classes
             "https://ipinfo.io/ip"
         };    
         
-        private static void Load()
+        private void Load()
         {
-            string? json = AppParamsStorage.LoadSavedJson();
-
-            if (json is not null)
-            { 
-                AppParams? temp = JsonSerializer.Deserialize<AppParams>(json);
-
-                if (temp is not null)
-                {
-                    Instance.AppMode = temp.AppMode;
-                    Instance.WebURL  = temp.WebURL;      
-                }
-            }
+            AppParamsDTO? temp = AppParamsStorage.LoadFromJson();
+            temp?.ApplyTo(this);                                                                                        // Apply the loaded values to the singleton instance           
         }
 
         public void Save()
         {
-            AppParamsStorage.SaveToJson(this);
+            AppParamsStorage.SaveToJson(AppParamsDTO.From(this));
+        }
+    }
+
+    public class AppParamsDTO                                                                                               // Data Transfer Object for AppParams because AppParams is a singleton and cannot be instantiated directly for serialization/deserialization
+    {
+        public AppParams.AppModeEnum AppMode { get; set; } = AppParams.AppModeDefault;
+        public string                WebURL  { get; set; } = AppParams.DefaultWebURL;
+
+        //
+
+        public static AppParamsDTO From(AppParams src)
+        {
+            AppParamsDTO ret = new();
+
+            ret.AppMode = src.AppMode;
+            ret.WebURL  = src.WebURL;
+
+            return ret;
+        }
+
+        public void ApplyTo(AppParams target)
+        {
+            target.AppMode = this.AppMode;
+            target.WebURL  = this.WebURL;
         }
     }
 }

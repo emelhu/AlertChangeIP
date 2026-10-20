@@ -11,9 +11,9 @@ using Microsoft.UI.Xaml.Controls;
 namespace AlertChangeIP
 {
     public sealed partial class MainWindow : Window
-    {
+    {        
         public MainWindow()
-        {
+        {            
             InitializeComponent();
 
             ExtendsContentIntoTitleBar = true;
@@ -45,12 +45,20 @@ namespace AlertChangeIP
         #endregion
 
         #region Navigation 
+
+        private static bool? toSettingsPage = null;
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             AppParams appParams = AppParams.Instance;
 
-            if (appParams.AppMode == AppParams.AppModeEnum.Ask)
+            if (toSettingsPage is null)
             {
+                toSettingsPage = (appParams.AppMode == AppParams.AppModeEnum.Ask);
+            }
+
+            if (toSettingsPage ?? true)
+            {
+                toSettingsPage = false;
                 NavFrame.Navigate(typeof(SettingsPage));
             }
             else if (args.IsSettingsSelected)

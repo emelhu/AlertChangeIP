@@ -12,7 +12,7 @@ namespace AlertChangeIP.Classes
     {
         private static string filePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AlertChangeIP", "AppParams.json");            // %LOCALAPPDATA%\AlertChangeIP\AppParams.json
 
-        public static void SaveToJson(AppParams appParams)
+        public static void SaveToJson(AppParamsDTO appParams)
         {
             string? directoryPath = Path.GetDirectoryName(filePath);
 
@@ -34,7 +34,7 @@ namespace AlertChangeIP.Classes
             }
         }    
 
-        public static string? LoadSavedJson()
+        public static AppParamsDTO? LoadFromJson()
         {
             if (File.Exists(filePath)) 
             {                 
@@ -42,7 +42,7 @@ namespace AlertChangeIP.Classes
                 {
                     var json = File.ReadAllText(filePath);
 
-                    return json;
+                    return JsonSerializer.Deserialize<AppParamsDTO>(json);
                 }
                 catch
                 {

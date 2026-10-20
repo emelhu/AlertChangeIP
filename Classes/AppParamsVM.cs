@@ -3,13 +3,14 @@ using CommunityToolkit.Mvvm.Input;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Text;
 using System.Xml.Linq;
 
 namespace AlertChangeIP.Classes
 {
-    internal partial class AppParamsVM : ObservableObject, IDisposable
+    public partial class AppParamsVM : ObservableObject 
     {
         #region Fields 
         [ObservableProperty]  public partial AppParams.AppModeEnum  AppMode { get; set; }
@@ -29,6 +30,8 @@ namespace AlertChangeIP.Classes
         {
             OnPropertyChanged(string.Empty);
         }
+
+        [ObservableProperty] public partial bool Show2ndExpander { get; set; } = false;
 
         public  List<string> WebURLList { get; }   
 
@@ -62,11 +65,21 @@ namespace AlertChangeIP.Classes
             OnPropertyChanged(string.Empty);
         }
 
-        public void Dispose()
+        public AppParams GetSource()
+        {
+            UpdateSource();
+            return sourceAppParams;
+        }
+
+        public void UpdateSource()
         {
             sourceAppParams.AppMode = this.AppMode;
             sourceAppParams.WebURL  = this.WebURL;
+        }
 
+        public void SaveSource()
+        {
+            UpdateSource();
             sourceAppParams.Save();
         }
         #endregion

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Page
+<Page 
     x:Class="AlertChangeIP.Pages.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,12 +8,38 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Padding="24,16,24,16" RowSpacing="24">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Home" />
-        <TextBlock Grid.Row="1" Text="This is the Home page" />
-    </Grid>
+    <StackPanel>
+        <!-- Ask -->
+
+        <Grid Padding="24,16,24,16" RowSpacing="24" Visibility="{x:Bind ViewModel.showAsk}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Home - Ask" />
+        </Grid>
+        
+        <!-- Once -->
+
+        <Grid Padding="24,16,24,16" RowSpacing="24"  Visibility="{x:Bind ViewModel.showOnce}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Home - Once" />
+        </Grid>
+
+        <!-- Loop -->
+
+        <Grid Padding="24,16,24,16" RowSpacing="24" Visibility="{x:Bind ViewModel.showLoop}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Home - Loop" />
+        </Grid>
+    </StackPanel>
 </Page>
