@@ -16,8 +16,36 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Home - Ask" />
+
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP but Setting page required." />
+
+            <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="/Assets/worldwide-location-96.gif"
+                       Width="64" Height="64"
+                       HorizontalAlignment="Left"
+                       Grid.Column="0"/>
+
+                    <Image Source="/Assets/ip-address-96.png"
+                       Width="64" Height="64"
+                       HorizontalAlignment="Right"
+                       Grid.Column="1"/>    
+                </Grid>
+
+                <Border Background="Moccasin" 
+                    BorderBrush="Navy"
+                    BorderThickness="2"
+                    Padding="12"
+                    Margin="12">
+
+                    <TextBlock Text="{x:Bind ViewModel.askText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                </Border>
+            </StackPanel>
         </Grid>
         
         <!-- Once -->
@@ -28,7 +56,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Home - Once" />
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP; one time." />
         </Grid>
 
         <!-- Loop -->
@@ -39,7 +67,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Home - Loop" />
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP; in an infinite loop." />
         </Grid>
     </StackPanel>
 </Page>

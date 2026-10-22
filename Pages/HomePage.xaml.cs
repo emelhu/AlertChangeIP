@@ -43,6 +43,8 @@ namespace AlertChangeIP.Pages
         [ObservableProperty] public partial Visibility showOnce { get; set; }
         [ObservableProperty] public partial Visibility showLoop { get; set; }
         [ObservableProperty] public partial Visibility showAsk  { get; set; }
+
+        public string askText { get; init; }
         #endregion
 
         #region Create ViewModel 
@@ -52,6 +54,8 @@ namespace AlertChangeIP.Pages
         public HomePageVM(AppParams appParams)
         {
             UpdateProperties(appParams);
+
+            askText = "To use the application, go to the Settings page and configure the operating parameters.";
         }
         #pragma warning restore CS8618
         #endregion
