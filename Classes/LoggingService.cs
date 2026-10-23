@@ -10,6 +10,14 @@ namespace AlertChangeIP.Classes
 
         public static void WriteLog(string text, LogLevel level = LogLevel.Info)
         {
+            string? directoryPath = Path.GetDirectoryName(logFileName);
+
+            if (directoryPath is not null && !Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+
             string logEntry = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} | {level.ToString()} | {text}";
             File.AppendAllText(logFileName, logEntry + Environment.NewLine);
         }

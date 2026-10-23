@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Net;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -65,16 +66,18 @@ namespace AlertChangeIP.Pages
         #region Create ViewModel 
         private AppParams parameters;
 
-        #pragma warning disable CS8618
+        #pragma warning disable CS8618, CS9264
         public HomePageVM(AppParams appParams)
         {
             UpdateProperties(appParams);
+
+            UpdateIPProperties();
 
             askText     = "To use the application, go to the Settings page and configure the operating parameters.";
             onceText    = "The application is running in Once mode. It will check the IP address once and then wait for the user's command.";
             loopText    = "The application is running in Loop mode. It will continuously check the IP address at regular intervals.";
         }
-        #pragma warning restore CS8618
+        #pragma warning restore CS8618, CS9264
         #endregion
 
         public void UpdateProperties(AppParams appParams)
@@ -88,6 +91,16 @@ namespace AlertChangeIP.Pages
             #endregion           
         }
 
+        public void UpdateIPProperties()
+        {
+            #region Set ViewModel IP variables 
+            actIP       = "???";                                                                                            // This should be set to the actual current IP address
+            lastRead    = "???";                                                                                            // This should be set to the actual last read time
+            prevIP      = "???";                                                                                            // This should be set to the actual previous IP address
+            prevRead    = "???";                                                                                            // This should be set to the actual previous read time
+            #endregion
+        }
+
 
         #region Helpers  
         public void RefreshView()
@@ -95,6 +108,6 @@ namespace AlertChangeIP.Pages
             OnPropertyChanged(string.Empty);
         }        
         #endregion
-    }
+    }    
 }
 

@@ -24,24 +24,35 @@
                 </Grid.ColumnDefinitions>
 
                 <Image Source="/Assets/worldwide-location-96.gif"
-               Width="64" Height="64"
-               HorizontalAlignment="Left"
-               Grid.Column="0"/>
+                   Width="64" Height="64"
+                   HorizontalAlignment="Left"
+                   Grid.Column="0"/>
 
                 <Image Source="/Assets/ip-address-96.png"
-               Width="64" Height="64"
-               HorizontalAlignment="Right"
-               Grid.Column="1"/>
+                   Width="64" Height="64"
+                   HorizontalAlignment="Right"
+                   Grid.Column="1"/>
             </Grid>
 
             <Border Background="Moccasin" 
-            BorderBrush="Navy"
-            BorderThickness="2"
-            Padding="12"
-            Margin="12">
+                BorderBrush="Navy"
+                BorderThickness="2"
+                Padding="12"
+                Margin="12">
 
-                <TextBlock Text="{x:Bind aboutText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                <TextBlock Text="{x:Bind aboutText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center">
+                    <TextBlock.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Exporting IP history to a text file" Click="IPHistoryExport_Click"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem Text="Test1 - Fill IP history with test data" Click="Test1_Click"/>
+                            <MenuFlyoutItem Text="Test2" Click="Test2_Click"/>
+                        </MenuFlyout>
+                    </TextBlock.ContextFlyout>
+                </TextBlock>
             </Border>
+
+            <TextBlock x:Name="messageText" Foreground="DarkGray" TextWrapping="Wrap" HorizontalAlignment="Right" Margin="12,48,12,12"/>
         </StackPanel>
     </Grid>
 </Page>
