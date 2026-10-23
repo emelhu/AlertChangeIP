@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:AlertChangeIP.Pages"
+    xmlns:classes="using:AlertChangeIP.Classes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
@@ -124,6 +125,55 @@
                     <TextBlock Text="{x:Bind ViewModel.loopText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center"/>
                 </Border>
             </StackPanel>
+        </Grid>
+
+        <!-- Once and Loop common -->
+
+        <Grid Padding="24,16,24,16" RowSpacing="24"  Visibility="{x:Bind ViewModel.showBoth}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="300" MaxHeight="300" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Currently valid public IP address:"  Grid.Row="0" Grid.Column="0" />
+            <TextBlock Text="Currently valid data's read time:"   Grid.Row="1" Grid.Column="0" />
+            <TextBlock Text="Previously valid public IP address:" Grid.Row="2" Grid.Column="0" />
+            <TextBlock Text="Previously valid data's read time:"  Grid.Row="3" Grid.Column="0" />
+            <TextBlock Text="IP reads history:"                   Grid.Row="4" Grid.Column="0" />
+
+            <TextBlock Text="{x:Bind ViewModel.actIP}"            Grid.Row="0" Grid.Column="1" />
+            <TextBlock Text="{x:Bind ViewModel.lastRead}"         Grid.Row="1" Grid.Column="1" />
+            <TextBlock Text="{x:Bind ViewModel.prevIP}"           Grid.Row="2" Grid.Column="1" />
+            <TextBlock Text="{x:Bind ViewModel.prevRead}"         Grid.Row="3" Grid.Column="1" />
+
+            <Border Grid.Row="4" Grid.Column="1" BorderBrush="Black" BorderThickness="2" Width="120" 
+                    Background="{x:Bind ViewModel.changedTextBackground}">
+                <TextBlock Text="{x:Bind ViewModel.changedText}" HorizontalTextAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{x:Bind ViewModel.changedTextForeground}" />
+            </Border>
+
+            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Width="400" MaxHeight="300"
+                    BorderBrush="Gray" BorderThickness="1">
+                <ListView x:Name="IPHistoryListView"  ItemsSource="{x:Bind ViewModel.ipHistory}" MaxHeight="300">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="classes:IPHistoryStruct">
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <TextBlock Text="{x:Bind ipText,   Mode=OneWay}"  Width="120" />
+                                <TextBlock Text="{x:Bind whenText, Mode=OneWay}"  Width="200" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Border>
         </Grid>
     </StackPanel>
 </Page>

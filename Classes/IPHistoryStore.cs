@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
+using Windows.Devices.Printers;
+
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AlertChangeIP.Classes
@@ -124,5 +126,8 @@ namespace AlertChangeIP.Classes
     {
         public Int32 ip;
         public DateTime when;
+
+        public string ipText   => Helper.IntToIp(ip);
+        public string whenText => when.ToString("yyyy-MM-dd HH:mm:ss");
     }
 }

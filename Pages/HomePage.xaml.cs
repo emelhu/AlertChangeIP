@@ -5,6 +5,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+
+using System.Collections.ObjectModel;
 using System.Net;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -44,11 +46,16 @@ namespace AlertChangeIP.Pages
         public Visibility showOnce { get; set; }
         public Visibility showLoop { get; set; }
         public Visibility showAsk  { get; set; }
+        public Visibility showBoth { get; set; }                                                                                            // Once or Loop mode, show both IP addresses and read times
 
-        [ObservableProperty] public partial string actIP    { get; set; }
-        [ObservableProperty] public partial string lastRead { get; set; }
-        [ObservableProperty] public partial string prevIP   { get; set; }
-        [ObservableProperty] public partial string prevRead { get; set; }
+        [ObservableProperty] public partial string      actIP       { get; set; }
+        [ObservableProperty] public partial string      lastRead    { get; set; }
+        [ObservableProperty] public partial string      prevIP      { get; set; }
+        [ObservableProperty] public partial string      prevRead    { get; set; }
+        [ObservableProperty] public partial string      changedText { get; set; } = String.Empty;
+        [ObservableProperty] public partial string      changedTextForeground { get; set; } = "Green";
+        [ObservableProperty] public partial string      changedTextBackground { get; set; } = "MintCream";
+        [ObservableProperty] public partial ObservableCollection<IPHistoryStruct>   ipHistory { get; set; } = new ObservableCollection<IPHistoryStruct>();
         #endregion
 
         #region Ask area Fields
@@ -88,16 +95,47 @@ namespace AlertChangeIP.Pages
             showOnce = (parameters.AppMode == AppParams.AppModeEnum.Once) ? Visibility.Visible : Visibility.Collapsed;
             showLoop = (parameters.AppMode == AppParams.AppModeEnum.Loop) ? Visibility.Visible : Visibility.Collapsed;
             showAsk  = (parameters.AppMode == AppParams.AppModeEnum.Ask)  ? Visibility.Visible : Visibility.Collapsed;
-            #endregion           
+            showBoth = (parameters.AppMode == AppParams.AppModeEnum.Once || parameters.AppMode == AppParams.AppModeEnum.Loop) ? Visibility.Visible : Visibility.Collapsed;
+            #endregion
         }
 
         public void UpdateIPProperties()
         {
             #region Set ViewModel IP variables 
-            actIP       = "???";                                                                                            // This should be set to the actual current IP address
-            lastRead    = "???";                                                                                            // This should be set to the actual last read time
+            actIP       = Helper.GetPublicIP(parameters.WebURL);                                                            // This should be set to the actual current IP address
+            lastRead    = DateTime.Now.ToString("yyyy.MM.dd hh.mm.ss");                                                     // This should be set to the actual last read time
             prevIP      = "???";                                                                                            // This should be set to the actual previous IP address
             prevRead    = "???";                                                                                            // This should be set to the actual previous read time
+
+            var tempList = IPHistoryStore.Read() ?? new List<IPHistoryStruct>();
+            tempList.Reverse();                                                                                             // Reverse the list to show the most recent entries first
+
+            if (tempList.Count > 0)                                                                                           
+            {
+                prevIP   = tempList[0].ipText;                                                                                             
+                prevRead = tempList[0].whenText;
+
+                if (prevIP == actIP)
+                {
+                    changedText           = "Identical IP";
+                    changedTextForeground = "Green";
+                    changedTextBackground = "MintCream";
+                }
+                else
+                {
+                    changedText           = "IP Changed!";
+                    changedTextForeground = "Red";
+                    changedTextBackground = "Yellow";
+                    IPHistoryStore.Write(actIP);
+                }
+            }
+            else
+            {
+                IPHistoryStore.Write(actIP);                                                                                              // If there is no history, write the current IP to the history
+            }
+
+            ipHistory = new ObservableCollection<IPHistoryStruct>(tempList);
+
             #endregion
         }
 

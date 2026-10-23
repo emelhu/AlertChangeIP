@@ -3,7 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AlertChangeIP.Classes
 {
@@ -28,6 +30,20 @@ namespace AlertChangeIP.Classes
             if (value.CompareTo(min) < 0) return min;
             if (value.CompareTo(max) > 0) return max;
             return value;
-        }        
+        }
+
+        public static string GetPublicIP(string webAddress)
+        {
+            using var client = new HttpClient();
+            string ip = client.GetStringAsync(webAddress).GetAwaiter().GetResult(); 
+            return ip.Trim();
+        }
+
+        public static async Task<string> GetPublicIPAsync(string webAddress)
+        {
+            using var client = new HttpClient();
+            string ip = await client.GetStringAsync(webAddress);
+            return ip.Trim();
+        }
     }
 }
