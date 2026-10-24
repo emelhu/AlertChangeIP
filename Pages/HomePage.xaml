@@ -9,171 +9,189 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel>
-        <!-- Ask -->
+    <Page.Resources>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Page.Resources>
 
-        <Grid Padding="24,16,24,16" RowSpacing="24" Visibility="{x:Bind ViewModel.showAsk}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <!-- Ask -->
 
-            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP but Setting page required." />
+            <Grid Padding="24,16,24,16" RowSpacing="24" Visibility="{x:Bind ViewModel.showAsk}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="12">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP but Setting page required." />
 
-                    <Image Source="/Assets/worldwide-location-96.gif"
-                       Width="64" Height="64"
-                       HorizontalAlignment="Left"
-                       Grid.Column="0"/>
+                <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <Image Source="/Assets/ip-address-96.png"
-                       Width="64" Height="64"
-                       HorizontalAlignment="Right"
-                       Grid.Column="1"/>    
-                </Grid>
+                        <Image Source="/Assets/worldwide-location-96.gif"
+                           Width="64" Height="64"
+                           HorizontalAlignment="Left"
+                           Grid.Column="0"/>
 
-                <Border Background="Moccasin" 
-                    BorderBrush="Navy"
-                    BorderThickness="2"
-                    Padding="12"
-                    Margin="12">
-
-                    <TextBlock Text="{x:Bind ViewModel.askText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center"/>
-                </Border>
-            </StackPanel>
-        </Grid>
-        
-        <!-- Once -->
-
-        <Grid Padding="24,16,24,16" RowSpacing="24"  Visibility="{x:Bind ViewModel.showOnce}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP; show and wait for command." />
-
-            <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="12">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Image Source="/Assets/worldwide-location-96.gif"
-                       Width="64" Height="64"
-                       HorizontalAlignment="Left"
-                       Grid.Column="0"/>
-
-                    <Image Source="/Assets/ip-address-96.png"
-                       Width="64" Height="64"
-                       HorizontalAlignment="Right"
-                       Grid.Column="1"/>
-                            </Grid>
+                        <Image Source="/Assets/ip-address-96.png"
+                           Width="64" Height="64"
+                           HorizontalAlignment="Right"
+                           Grid.Column="1"/>
+                    </Grid>
 
                     <Border Background="Moccasin" 
                         BorderBrush="Navy"
                         BorderThickness="2"
                         Padding="12"
-                        Margin="12">    
+                        Margin="12">
+
+                        <TextBlock Text="{x:Bind ViewModel.askText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <!-- Once -->
+
+            <Grid Padding="24,16,24,16" RowSpacing="24"  Visibility="{x:Bind ViewModel.showOnce}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP; show and wait for command." />
+
+                <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="/Assets/worldwide-location-96.gif"
+                           Width="64" Height="64"
+                           HorizontalAlignment="Left"
+                           Grid.Column="0"/>
+
+                        <Image Source="/Assets/ip-address-96.png"
+                           Width="64" Height="64"
+                           HorizontalAlignment="Right"
+                           Grid.Column="1"/>
+                    </Grid>
+
+                    <Border Background="Moccasin" 
+                            BorderBrush="Navy"
+                            BorderThickness="2"
+                            Padding="12"
+                            Margin="12">
 
                         <TextBlock Text="{x:Bind ViewModel.onceText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <!-- Loop -->
+
+            <Grid Padding="24,16,24,16" RowSpacing="24" Visibility="{x:Bind ViewModel.showLoop}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP; an infinite loop in background." />
+
+                <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="/Assets/worldwide-location-96.gif"
+                           Width="64" Height="64"
+                           HorizontalAlignment="Left"
+                           Grid.Column="0"/>
+
+                        <Image Source="/Assets/ip-address-96.png"
+                           Width="64" Height="64"
+                           HorizontalAlignment="Right"
+                           Grid.Column="1"/>
+                    </Grid>
+
+                    <Border Background="Moccasin" 
+                        BorderBrush="Navy"
+                        BorderThickness="2"
+                        Padding="12"
+                        Margin="12">
+
+                        <TextBlock Text="{x:Bind ViewModel.loopText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <!-- Once and Loop common -->
+
+            <Grid Padding="24,16,24,16" RowSpacing="24"  Visibility="{x:Bind ViewModel.showBoth}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />                         <!-- 0 -->
+                    <RowDefinition Height="Auto" />                         <!-- 1 -->
+                    <RowDefinition Height="Auto" />                         <!-- 2 -->
+                    <RowDefinition Height="Auto" />                         <!-- 3 -->
+                    <RowDefinition Height="Auto" />                         <!-- 4 -->
+                    <RowDefinition Height="300" MaxHeight="300" />          <!-- 5 -->
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Currently valid public IP address:"        Grid.Row="0" Grid.Column="0" />
+                <TextBlock Text="Currently valid public IP read time:"      Grid.Row="1" Grid.Column="0" />
+                <TextBlock Text="Previously valid public IP address:"       Grid.Row="2" Grid.Column="0" />
+                <TextBlock Text="Previously valid public IP read time:"     Grid.Row="3" Grid.Column="0" />
+                <TextBlock Text="IP reads history:"                         Grid.Row="5" Grid.Column="0" />
+
+                <TextBlock Text="{x:Bind ViewModel.actIP,    Mode=TwoWay}"  Grid.Row="0" Grid.Column="1" />
+                <TextBlock Text="{x:Bind ViewModel.lastRead, Mode=TwoWay}"  Grid.Row="1" Grid.Column="1" />
+                <TextBlock Text="{x:Bind ViewModel.prevIP,   Mode=TwoWay}"  Grid.Row="2" Grid.Column="1" />
+                <TextBlock Text="{x:Bind ViewModel.prevRead, Mode=TwoWay}"  Grid.Row="3" Grid.Column="1" />
+
+                <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"  Background="Ivory" BorderBrush="Gainsboro"  BorderThickness="1" >
+                    <TextBlock Text="{x:Bind ViewModel.message, Mode=TwoWay}"   Foreground="Sienna" HorizontalAlignment="Center" />
                 </Border>
-            </StackPanel>
-        </Grid>
 
-        <!-- Loop -->
+                <Button Grid.Row="0"    Grid.Column="2" Width="120" Command="{x:Bind ViewModel.CheckIPButtonClickCommand}">Check IP</Button>
 
-        <Grid Padding="24,16,24,16" RowSpacing="24" Visibility="{x:Bind ViewModel.showLoop}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP; an infinite loop in background." />
-
-            <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="12">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Image Source="/Assets/worldwide-location-96.gif"
-                       Width="64" Height="64"
-                       HorizontalAlignment="Left"
-                       Grid.Column="0"/>
-
-                    <Image Source="/Assets/ip-address-96.png"
-                       Width="64" Height="64"
-                       HorizontalAlignment="Right"
-                       Grid.Column="1"/>    
-                </Grid>
-
-                <Border Background="Moccasin" 
-                    BorderBrush="Navy"
-                    BorderThickness="2"
-                    Padding="12"
-                    Margin="12">    
-
-                    <TextBlock Text="{x:Bind ViewModel.loopText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                <Border Grid.Row="1" Grid.Column="2" BorderBrush="Black" BorderThickness="2" Width="120" Background="{x:Bind ViewModel.changedTextBackground, Mode=TwoWay}">
+                    <TextBlock Text="{x:Bind ViewModel.changedText, Mode=TwoWay}" HorizontalTextAlignment="Center" HorizontalAlignment="Center"
+                        Foreground="{x:Bind ViewModel.changedTextForeground, Mode=TwoWay}" />
                 </Border>
-            </StackPanel>
-        </Grid>
+                
+                <Button   Grid.Row="2"  Grid.Column="2" Width="120" Command="{x:Bind ViewModel.SaveIPButtonClickCommand}">Save IP</Button>
 
-        <!-- Once and Loop common -->
+                <CheckBox Grid.Row="3"  Grid.Column="2" IsChecked="{x:Bind ViewModel.forcesSaveIPButton, Mode=TwoWay}" Foreground="Gainsboro" >Force Save IP</CheckBox>
+                
 
-        <Grid Padding="24,16,24,16" RowSpacing="24"  Visibility="{x:Bind ViewModel.showBoth}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="300" MaxHeight="300" />
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="Currently valid public IP address:"  Grid.Row="0" Grid.Column="0" />
-            <TextBlock Text="Currently valid data's read time:"   Grid.Row="1" Grid.Column="0" />
-            <TextBlock Text="Previously valid public IP address:" Grid.Row="2" Grid.Column="0" />
-            <TextBlock Text="Previously valid data's read time:"  Grid.Row="3" Grid.Column="0" />
-            <TextBlock Text="IP reads history:"                   Grid.Row="4" Grid.Column="0" />
-
-            <TextBlock Text="{x:Bind ViewModel.actIP}"            Grid.Row="0" Grid.Column="1" />
-            <TextBlock Text="{x:Bind ViewModel.lastRead}"         Grid.Row="1" Grid.Column="1" />
-            <TextBlock Text="{x:Bind ViewModel.prevIP}"           Grid.Row="2" Grid.Column="1" />
-            <TextBlock Text="{x:Bind ViewModel.prevRead}"         Grid.Row="3" Grid.Column="1" />
-
-            <Border Grid.Row="4" Grid.Column="1" BorderBrush="Black" BorderThickness="2" Width="120" 
-                    Background="{x:Bind ViewModel.changedTextBackground}">
-                <TextBlock Text="{x:Bind ViewModel.changedText}" HorizontalTextAlignment="Center" HorizontalAlignment="Center"
-                           Foreground="{x:Bind ViewModel.changedTextForeground}" />
-            </Border>
-
-            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Width="400" MaxHeight="300"
-                    BorderBrush="Gray" BorderThickness="1">
-                <ListView x:Name="IPHistoryListView"  ItemsSource="{x:Bind ViewModel.ipHistory}" MaxHeight="300">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="classes:IPHistoryStruct">
-                            <StackPanel Orientation="Horizontal" Spacing="12">
-                                <TextBlock Text="{x:Bind ipText,   Mode=OneWay}"  Width="120" />
-                                <TextBlock Text="{x:Bind whenText, Mode=OneWay}"  Width="200" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Border>
-        </Grid>
-    </StackPanel>
+                <CheckBox Grid.Row="5" Grid.Column="2" IsChecked="{x:Bind ViewModel.showIPHistory, Mode=TwoWay}">Show/Hide history</CheckBox>
+                <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Width="400" MaxHeight="300"
+                        x:Name="IPHistoryBorder" BorderBrush="Gray" BorderThickness="1" Visibility="{x:Bind ViewModel.visibilityIPHistory, Mode=TwoWay}">
+                    <ListView x:Name="IPHistoryListView"  ItemsSource="{x:Bind ViewModel.ipHistory, Mode=TwoWay}" MaxHeight="300">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="classes:IPHistoryStruct">
+                                <StackPanel Orientation="Horizontal" Spacing="0">
+                                    <TextBlock Text="{x:Bind ipText}"  Width="120" />
+                                    <TextBlock Text="{x:Bind whenText}"  Width="200" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

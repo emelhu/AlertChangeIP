@@ -110,7 +110,7 @@ namespace AlertChangeIP.Pages
                 foreach (var item in list)
                 {
                     string ip = Helper.IntToIp(item.ip);
-                    string dt = item.when.ToString("yyyy.MM.dd hh.mm.ss");
+                    string dt = item.when.ToString("yyyy.MM.dd HH.mm.ss");
 
                     System.IO.File.AppendAllText(tempFile, $"IP: {ip}  Time: {dt}\r\n");
                 } 

@@ -3,10 +3,13 @@ using AlertChangeIP.Classes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Net;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -48,32 +51,75 @@ namespace AlertChangeIP.Pages
         public Visibility showAsk  { get; set; }
         public Visibility showBoth { get; set; }                                                                                            // Once or Loop mode, show both IP addresses and read times
 
-        [ObservableProperty] public partial string      actIP       { get; set; }
-        [ObservableProperty] public partial string      lastRead    { get; set; }
-        [ObservableProperty] public partial string      prevIP      { get; set; }
-        [ObservableProperty] public partial string      prevRead    { get; set; }
+        [ObservableProperty] public partial string      actIP       { get; set; } = String.Empty;
+        [ObservableProperty] public partial string      lastRead    { get; set; } = String.Empty;
+        [ObservableProperty] public partial string      prevIP      { get; set; } = String.Empty;
+        [ObservableProperty] public partial string      prevRead    { get; set; } = String.Empty;
         [ObservableProperty] public partial string      changedText { get; set; } = String.Empty;
-        [ObservableProperty] public partial string      changedTextForeground { get; set; } = "Green";
-        [ObservableProperty] public partial string      changedTextBackground { get; set; } = "MintCream";
+        [ObservableProperty] public partial string      message     { get; set; } = String.Empty;
+        [ObservableProperty] public partial Brush       changedTextForeground { get; set; } = new SolidColorBrush(Colors.Green);    
+        [ObservableProperty] public partial Brush       changedTextBackground { get; set; } = new SolidColorBrush(Colors.MintCream);
         [ObservableProperty] public partial ObservableCollection<IPHistoryStruct>   ipHistory { get; set; } = new ObservableCollection<IPHistoryStruct>();
+        [ObservableProperty] public partial bool        showIPHistory       { get; set; } = false;
+        [ObservableProperty] public partial bool        forcesSaveIPButton  { get; set; } = false;
+
+        partial void OnshowIPHistoryChanged(bool value)
+        {                                                                                               // Visibility="{x:Bind ViewModel.showIPHistory, Converter={StaticResource BoolToVisibilityConverter}}"    Visibility="{x:Bind ViewModel.visibilityIPHistory, Mode=TwoWay}"
+            visibilityIPHistory = value ? Visibility.Visible : Visibility.Collapsed;
+            RefreshView();
+        }
+        [ObservableProperty] public partial Visibility visibilityIPHistory { get; set; } = Visibility.Collapsed;
         #endregion
 
         #region Ask area Fields
-        public string askText { get; init; }
+        public string askText { get; init; } = String.Empty;
         #endregion
 
         #region Once area Fields
-        public string onceText { get; init; }
+        public string onceText { get; init; } = String.Empty;   
         #endregion
 
         #region Loop area Fields
-        public string loopText { get; init; }
+        public string loopText { get; init; } = String.Empty;
+        #endregion
+
+        #region  Once & Loop area Buttons
+        [RelayCommand] private async Task CheckIPButtonClick()
+        {   // This method is called when the "Check IP" button is clicked in the UI
+            var oldIP = actIP;
+
+            UpdateIPProperties();
+
+            if (actIP == oldIP)
+            {
+                await ShowMessageAsync("The IP address has not changed, same as before.");
+            }
+            else
+            {
+                await ShowMessageAsync("The IP address has changed! Please save it if necessary.");
+            }
+        }
+
+        [RelayCommand] private async Task SaveIPButtonClick()
+        {   // This method is called when the "Save IP" button is clicked in the UI
+            if ((actIP != prevIP) || forcesSaveIPButton)
+            { 
+                IPHistoryStore.Write(actIP);
+
+                UpdateIPProperties();                                                                                                            
+
+                await ShowMessageAsync("The IP address has saved!");
+            }
+            else
+            {
+                await ShowMessageAsync("The IP address has not changed; it's the same as before, so it wasn’t saved!");
+            }
+        }
         #endregion
 
         #region Create ViewModel 
-        private AppParams parameters;
-
-        #pragma warning disable CS8618, CS9264
+        private AppParams parameters = AppParams.Instance;
+        
         public HomePageVM(AppParams appParams)
         {
             UpdateProperties(appParams);
@@ -84,7 +130,6 @@ namespace AlertChangeIP.Pages
             onceText    = "The application is running in Once mode. It will check the IP address once and then wait for the user's command.";
             loopText    = "The application is running in Loop mode. It will continuously check the IP address at regular intervals.";
         }
-        #pragma warning restore CS8618, CS9264
         #endregion
 
         public void UpdateProperties(AppParams appParams)
@@ -99,11 +144,15 @@ namespace AlertChangeIP.Pages
             #endregion
         }
 
-        public void UpdateIPProperties()
+        public void UpdateIPProperties(bool actualizeIP = true)
         {
             #region Set ViewModel IP variables 
-            actIP       = Helper.GetPublicIP(parameters.WebURL);                                                            // This should be set to the actual current IP address
-            lastRead    = DateTime.Now.ToString("yyyy.MM.dd hh.mm.ss");                                                     // This should be set to the actual last read time
+            if (actualizeIP)
+            {
+                actIP    = Helper.GetPublicIP(parameters.WebURL);                                                           // This should be set to the actual current IP address
+                lastRead = DateTime.Now.ToString("yyyy.MM.dd HH.mm.ss");                                                    // This should be set to the actual last read time
+            }
+
             prevIP      = "???";                                                                                            // This should be set to the actual previous IP address
             prevRead    = "???";                                                                                            // This should be set to the actual previous read time
 
@@ -118,20 +167,21 @@ namespace AlertChangeIP.Pages
                 if (prevIP == actIP)
                 {
                     changedText           = "Identical IP";
-                    changedTextForeground = "Green";
-                    changedTextBackground = "MintCream";
+                    changedTextForeground = new SolidColorBrush(Colors.Green);
+                    changedTextBackground = new SolidColorBrush(Colors.MintCream);
                 }
                 else
                 {
                     changedText           = "IP Changed!";
-                    changedTextForeground = "Red";
-                    changedTextBackground = "Yellow";
-                    IPHistoryStore.Write(actIP);
+                    changedTextForeground = new SolidColorBrush(Colors.Red);
+                    changedTextBackground = new SolidColorBrush(Colors.Yellow);                     
                 }
             }
             else
             {
-                IPHistoryStore.Write(actIP);                                                                                              // If there is no history, write the current IP to the history
+                changedText = "No previous IP"; 
+                changedTextForeground = new SolidColorBrush(Colors.Gray);
+                changedTextBackground = new SolidColorBrush(Colors.LightGray);
             }
 
             ipHistory = new ObservableCollection<IPHistoryStruct>(tempList);
@@ -144,7 +194,16 @@ namespace AlertChangeIP.Pages
         public void RefreshView()
         {
             OnPropertyChanged(string.Empty);
-        }        
+        }    
+        
+        public async Task ShowMessageAsync(string message, int delayToClear = 2000)
+        {
+            this.message = message;
+
+            await Task.Delay(delayToClear);
+
+            this.message = string.Empty;
+        }
         #endregion
     }    
 }
