@@ -141,7 +141,7 @@
                     <RowDefinition Height="Auto" />                         <!-- 2 -->
                     <RowDefinition Height="Auto" />                         <!-- 3 -->
                     <RowDefinition Height="Auto" />                         <!-- 4 -->
-                    <RowDefinition Height="300" MaxHeight="300" />          <!-- 5 -->
+                    <RowDefinition Height="Auto" MaxHeight="300" />          <!-- 5 -->
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>

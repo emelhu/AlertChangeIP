@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Text;
 using System.Xml.Linq;
@@ -55,6 +56,13 @@ namespace AlertChangeIP.Classes
 
             WebURLList       = new List<string>(AppParams.WebURLList);
             AppModeEnumsList = Enum.GetValues(typeof(AppParams.AppModeEnum)).Cast<AppParams.AppModeEnum>().ToList();
+        }
+        #endregion
+
+        #region Tray icon       
+        partial void OnAppModeChanged(AppParams.AppModeEnum oldValue, AppParams.AppModeEnum newValue)
+        {
+            AppParams.Instance.handleWindowClose = (AppParams.Instance.AppMode == AppParams.AppModeEnum.Loop);
         }
         #endregion
 

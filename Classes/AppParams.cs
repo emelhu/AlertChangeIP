@@ -21,11 +21,15 @@ namespace AlertChangeIP.Classes
             Load();  
         }
 
-        public          AppModeEnum     AppMode { get; set; } = AppModeDefault;                                                 // { get; set; } to JasonSerializer
+        // { get; set; } to JasonSerializer
+        private         AppModeEnum    _appMode = AppModeDefault;
+        public          AppModeEnum     AppMode { get { return _appMode; } set { _appMode = value; handleWindowClose = (value == AppModeEnum.Loop); } }                                                
         public static   AppModeEnum     AppModeDefault  = AppModeEnum.Ask;
 
         public const    string          DefaultWebURL = "https://api.ipify.org";
         public          string          WebURL { get; set; } = DefaultWebURL;                                                   // { get; set; } to JasonSerializer
+
+        public bool     handleWindowClose = true;                                                                               // Not saved, set by AppMode property & MainWindow UI, used in MainWindow.Closed() to determine Tray icon behavior 
 
         public enum AppModeEnum
         {

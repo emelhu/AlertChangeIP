@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,22 @@ namespace AlertChangeIP.Classes
             using var client = new HttpClient();
             string ip = await client.GetStringAsync(webAddress);
             return ip.Trim();
+        }
+
+        public static async Task<bool> ShowDialogAsync(FrameworkElement frameworkElement, string message, string title = "Warning!", string primaryText = "Yes", string closeText = "No")      // frameworkElement -> ((FrameworkElement)window.Content).XamlRoot
+        {   
+            ContentDialog dialog = new()
+            {
+                Title   = title,
+                Content = message,
+                PrimaryButtonText   = primaryText,
+                CloseButtonText     = closeText,
+                XamlRoot = frameworkElement.XamlRoot                                                                                                                                   
+            };
+
+            var answer = await dialog.ShowAsync();
+
+            return (answer == ContentDialogResult.Primary);
         }
     }
 }

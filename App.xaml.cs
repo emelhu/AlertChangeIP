@@ -7,7 +7,11 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
+//using H.NotifyIcon;                                                                                                         // NuGet package: Install-Package H.NotifyIcon.WinUI
+
 using System.Diagnostics;
+
+using WinRT.AlertChangeIPVtableClasses;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -19,15 +23,15 @@ namespace AlertChangeIP
     /// </summary>
     public partial class App : Application
     {
-        private Window? _window;
+        public MainWindow? mainWindowInstance { get; private set; }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
+        /// executed, and as such is the logical equivalent of main() or WinMain(). 
         /// </summary>
         public App()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         /// <summary>
@@ -66,8 +70,9 @@ namespace AlertChangeIP
             }
             //
 
-            _window = new MainWindow();
-            _window.Activate();
+            mainWindowInstance = new MainWindow();
+
+            mainWindowInstance.Activate();
         }
     }
 }

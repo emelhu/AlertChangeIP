@@ -6,8 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:AlertChangeIP"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tb="using:H.NotifyIcon"
+    
     Title="AlertChangeIP"
+    
     mc:Ignorable="d">
+    
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
@@ -17,10 +21,28 @@
             <RowDefinition Height="48" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        
+        <!-- Tray -->
+
+        <tb:TaskbarIcon x:Name="TrayIcon"
+                        IconSource="/Assets/AppIcon.ico"
+                        ToolTipText="Alert Change public IP"
+                        LeftClickCommand="{x:Bind ShowWindowCommand}" >
+
+            <tb:TaskbarIcon.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Megnyitás" Click="TrayIcon_OpenClick" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem Text="Kilépés" Click="TrayIcon_ExitClick" />
+                </MenuFlyout>
+            </tb:TaskbarIcon.ContextFlyout>
+        </tb:TaskbarIcon>
+
+        <!-- -->
 
         <TitleBar
             x:Name="AppTitleBar"
-            Title="AlertChangeIP"
+            Title="AlertChangeIP - Alert if Change public IP - (c) eMeL [www.emel.hu]"
             BackRequested="TitleBar_BackRequested"
             IsBackButtonVisible="{x:Bind NavFrame.CanGoBack, Mode=OneWay}"
             IsPaneToggleButtonVisible="True"
@@ -28,6 +50,12 @@
             <TitleBar.IconSource>
                 <ImageIconSource ImageSource="Assets/AppIcon.ico" />
             </TitleBar.IconSource>
+
+            <TitleBar.Content>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="Close or Hide" Click="TitleBar_CloseOrHideClick" HorizontalAlignment="Right" />
+                </StackPanel>
+            </TitleBar.Content>
         </TitleBar>
 
         <NavigationView

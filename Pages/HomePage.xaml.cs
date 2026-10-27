@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 
@@ -35,9 +36,29 @@ namespace AlertChangeIP.Pages
             HomePage.lastHomePageVM = this.ViewModel;
         }
 
-        private void HomePage_Loaded(object sender, RoutedEventArgs e)
+        private async void HomePage_Loaded(object sender, RoutedEventArgs e)
         {           
             this.ViewModel.RefreshView();
+
+            // 
+
+            // bool answer = await Helper.ShowDialogAsync(this, "Which action would you like to take? 'Close' or 'Hide' the window?", "'Close' or 'Hide' the window?", "Close", "Hide");
+
+            if (AppParams.Instance.AppMode == AppParams.AppModeEnum.Loop)
+            {  // Handle Loop mode specific logic here
+                AppParams.Instance.handleWindowClose = true;                                                                // Window.Closed() -> for Close or Hide question                                                                                                 
+
+                await Task.Delay(1000).ContinueWith(_ =>
+                {
+                    this.ViewModel.autoMinimizeToTrayIkon = true;                                                           // because start process clear it with property changes
+                });
+
+                 await Task.Delay(10000).ContinueWith(_ =>                                                                  // If the user doesn't make any changes, it will automatically go to the background after 10 seconds
+                {
+                    var app = (App)Application.Current;
+                    app.mainWindowInstance?.HideToTray();
+                }); 
+            }
         }
 
         public static HomePageVM? lastHomePageVM = null;
@@ -101,7 +122,8 @@ namespace AlertChangeIP.Pages
         }
 
         [RelayCommand] private async Task SaveIPButtonClick()
-        {   // This method is called when the "Save IP" button is clicked in the UI
+        {   // This method is called when the "Save IP" button is clicked in the UI           
+
             if ((actIP != prevIP) || forcesSaveIPButton)
             { 
                 IPHistoryStore.Write(actIP);
@@ -127,8 +149,13 @@ namespace AlertChangeIP.Pages
             UpdateIPProperties();
 
             askText     = "To use the application, go to the Settings page and configure the operating parameters.";
-            onceText    = "The application is running in Once mode. It will check the IP address once and then wait for the user's command.";
-            loopText    = "The application is running in Loop mode. It will continuously check the IP address at regular intervals.";
+            onceText    = "The application is running in Once mode. It will check the IP address once and then wait for the user's command.\r\n" +
+                          "You can switch to Loop mode in the Settings page if you want the application to continuously check the IP address at regular intervals.";
+            loopText    = "The application is running in Loop mode. It will continuously check the IP address at regular intervals.\r\n\r\n" +
+                          "This page is currently visible, but it can be minimized to a tray icon and will then run in the background.\r\n" + 
+                          "If it detects a change to your public IP address, it will pop up in the foreground so you can see it. You can also trigger this by clicking the tray icon.\r\n" +
+                          "If you click this text, the application will remain in the foreground until you close this window.\r\n" +
+                          "This application will also automatically go to the background after 10 seconds if you do not make any changes on this screen.";
         }
         #endregion
 
@@ -189,6 +216,19 @@ namespace AlertChangeIP.Pages
             #endregion
         }
 
+        #region Tray Ikon
+
+        public bool autoMinimizeToTrayIkon { get; set; } = false;                                                               // This property indicates whether the application should minimize to the system tray icon instead of closing completely
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)                                               // Override the OnPropertyChanged method to check any property changes for send/recall to/from Tray Ikon 
+        {
+            base.OnPropertyChanged(e);
+
+            autoMinimizeToTrayIkon = false;                           
+
+            Debug.WriteLine($"Property changed: {e.PropertyName}");
+        }
+        #endregion
 
         #region Helpers  
         public void RefreshView()
