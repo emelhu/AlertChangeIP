@@ -7,11 +7,14 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Media;
 using System.Net;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -38,31 +41,93 @@ namespace AlertChangeIP.Pages
 
         private async void HomePage_Loaded(object sender, RoutedEventArgs e)
         {           
-            this.ViewModel.RefreshView();
-
-            // 
-
-            // bool answer = await Helper.ShowDialogAsync(this, "Which action would you like to take? 'Close' or 'Hide' the window?", "'Close' or 'Hide' the window?", "Close", "Hide");
+            this.ViewModel.RefreshView();    
+            this.ViewModel.loopText2 = this.ViewModel.loopText2Init;
 
             if (AppParams.Instance.AppMode == AppParams.AppModeEnum.Loop)
             {  // Handle Loop mode specific logic here
-                AppParams.Instance.handleWindowClose = true;                                                                // Window.Closed() -> for Close or Hide question                                                                                                 
+                AppParams.Instance.handleWindowClose = true;                                                                                    // Window.Closed() -> for Close or Hide question
 
-                await Task.Delay(1000).ContinueWith(_ =>
-                {
-                    this.ViewModel.autoMinimizeToTrayIkon = true;                                                           // because start process clear it with property changes
-                });
+                await Task.Delay(1000);
+                this.ViewModel.autoMinimizeToTrayIkon = true;                                                                                   // because start process clear it with property changes
 
-                 await Task.Delay(10000).ContinueWith(_ =>                                                                  // If the user doesn't make any changes, it will automatically go to the background after 10 seconds
+                await Task.Delay(10000);                                                                                                        // If the user doesn't make any changes, it will automatically go to the background after 10 seconds
+
+                if (ViewModel.autoMinimizeToTrayIkon)
                 {
-                    var app = (App)Application.Current;
-                    app.mainWindowInstance?.HideToTray();
-                }); 
+                    await HideToTray();
+                }
             }
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            AppParams.Instance.handleWindowClose        = false;                                                                                // Normal close event when navigating away from this page
+            ViewModel.autoMinimizeToTrayIkon            = false;                                                                                // Stop the automatic minimize to tray icon when navigating away from this page
+            AppParams.Instance.isBackgroundTaskRunning  = false;                                                                                // Stop the background task when the window is navigated away from
+
+            base.OnNavigatedFrom(e);
+        }
+
+        private async void CloseOrHideClick(object sender, RoutedEventArgs e)                                                                   // Added by eMeL
+        {
+            ViewModel.autoMinimizeToTrayIkon = false;                                                                                           // stop automation
+            ViewModel.loopText2              = string.Empty;                                                                                    // Clear the loopText2 message 
+
+            if (sender is Button button)
+            {
+                switch (button.Name)
+                {
+                    case "CloseButton":
+                        if (await Helper.ShowDialog_YesNo_Async(this, "Are you sure you want to close this application?", "Exit from this application?"))
+                        {
+                            AppParams.Instance.handleWindowClose = false;
+                            Application.Current.Exit();
+                        }
+                        break;
+
+                    case "HideButton":
+                        await HideToTray();
+                        break;
+                }
+            }    
+        }
+
         public static HomePageVM? lastHomePageVM = null;
+
+        private async Task HideToTray()
+        {
+            ViewModel.loopText2 = string.Empty;                                                                                                 // Clear the loopText2 message 
+
+            var app = (App)Application.Current;
+            app.mainWindowInstance?.HideToTray();
+
+            AppParams.Instance.isBackgroundTaskRunning = true;
+
+            string messageToView = "Show from tray!";
+
+            do
+            {
+                await Task.Delay(1000);                                                                                                         // Wait for 1 second before checking again
+
+                var actIP = Helper.GetPublicIP(AppParams.Instance.WebURL);                                                                      // This should be set to the actual current IP address
+
+                if (actIP != ViewModel.actIP)
+                {
+                    ViewModel.UpdateIPProperties();
+                    messageToView = "The IP address has changed! Show from tray! Please save it if necessary.";
+
+                    AppParams.Instance.isBackgroundTaskRunning = false;                                                                        // Stop the background task when the IP address has changed
+                    SystemSounds.Exclamation.Play();
+                }
+
+            } while (AppParams.Instance.isBackgroundTaskRunning);
+
+            await ViewModel.ShowMessageAsync(messageToView);          
+        }       
     }
+
+    //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public partial class HomePageVM : ObservableObject 
     {
@@ -93,15 +158,22 @@ namespace AlertChangeIP.Pages
         #endregion
 
         #region Ask area Fields
-        public string askText { get; init; } = String.Empty;
+        public string askText { get; init; }    = String.Empty;
         #endregion
 
         #region Once area Fields
-        public string onceText { get; init; } = String.Empty;   
+        public string onceText { get; init; }   = String.Empty;
         #endregion
 
-        #region Loop area Fields
-        public string loopText { get; init; } = String.Empty;
+        #region Loop area Fields & Buttons
+        public string loopText  { get; init; }  = String.Empty;
+        [ObservableProperty] public partial string loopText2 { get; set; }   = String.Empty;
+        public string loopText2Init { get; init; } = String.Empty;
+
+        [RelayCommand] private async Task DontHideSignalButtonClick()
+        {
+            autoMinimizeToTrayIkon = false;                                                                                                   // This will prevent the application from automatically minimizing to the system tray icon
+        }        
         #endregion
 
         #region  Once & Loop area Buttons
@@ -153,8 +225,9 @@ namespace AlertChangeIP.Pages
                           "You can switch to Loop mode in the Settings page if you want the application to continuously check the IP address at regular intervals.";
             loopText    = "The application is running in Loop mode. It will continuously check the IP address at regular intervals.\r\n\r\n" +
                           "This page is currently visible, but it can be minimized to a tray icon and will then run in the background.\r\n" + 
-                          "If it detects a change to your public IP address, it will pop up in the foreground so you can see it. You can also trigger this by clicking the tray icon.\r\n" +
-                          "If you click this text, the application will remain in the foreground until you close this window.\r\n" +
+                          "If it detects a change to your public IP address, it will pop up in the foreground so you can see it. You can also trigger this by clicking the tray icon.\r\n";
+            loopText2   = string.Empty;
+            loopText2Init = "If you click this text, the application will remain in the foreground until you close this window.\r\n" +
                           "This application will also automatically go to the background after 10 seconds if you do not make any changes on this screen.";
         }
         #endregion
@@ -218,7 +291,7 @@ namespace AlertChangeIP.Pages
 
         #region Tray Ikon
 
-        public bool autoMinimizeToTrayIkon { get; set; } = false;                                                               // This property indicates whether the application should minimize to the system tray icon instead of closing completely
+        public bool autoMinimizeToTrayIkon { get; set; } = false;                                                           // This property indicates whether the application should minimize to the system tray icon instead of closing completely
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)                                               // Override the OnPropertyChanged method to check any property changes for send/recall to/from Tray Ikon 
         {

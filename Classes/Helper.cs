@@ -47,20 +47,37 @@ namespace AlertChangeIP.Classes
             return ip.Trim();
         }
 
-        public static async Task<bool> ShowDialogAsync(FrameworkElement frameworkElement, string message, string title = "Warning!", string primaryText = "Yes", string closeText = "No")      // frameworkElement -> ((FrameworkElement)window.Content).XamlRoot
+        public static async Task<bool> ShowDialog_YesNo_Async(FrameworkElement frameworkElement, string message, string title = "Warning!", string primaryText = "Yes", string closeText = "No")      // frameworkElement -> ((FrameworkElement)window.Content).XamlRoot
         {   
             ContentDialog dialog = new()
             {
-                Title   = title,
-                Content = message,
+                Title               = title,
+                Content             = message,
                 PrimaryButtonText   = primaryText,
                 CloseButtonText     = closeText,
-                XamlRoot = frameworkElement.XamlRoot                                                                                                                                   
+                XamlRoot            = frameworkElement.XamlRoot                                                                                                                                   
             };
 
             var answer = await dialog.ShowAsync();
 
             return (answer == ContentDialogResult.Primary);
+        }
+
+        public static async Task<bool?> ShowDialog_YesNoCancel_Async(FrameworkElement frameworkElement, string message, string title = "Warning!", string primaryText = "Yes", string secondaryText = "No", string closeText = "Cancel")      // frameworkElement -> ((FrameworkElement)window.Content).XamlRoot
+        {
+            ContentDialog dialog = new()
+            {
+                Title               = title,
+                Content             = message,
+                PrimaryButtonText   = primaryText,
+                SecondaryButtonText = secondaryText,
+                CloseButtonText     = closeText,
+                XamlRoot            = frameworkElement.XamlRoot
+            };
+
+            var answer = await dialog.ShowAsync();
+
+            return (answer == ContentDialogResult.Primary) ? true : ((answer == ContentDialogResult.Secondary) ? false : (bool?)null);
         }
     }
 }

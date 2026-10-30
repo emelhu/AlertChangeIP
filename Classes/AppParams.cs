@@ -29,7 +29,8 @@ namespace AlertChangeIP.Classes
         public const    string          DefaultWebURL = "https://api.ipify.org";
         public          string          WebURL { get; set; } = DefaultWebURL;                                                   // { get; set; } to JasonSerializer
 
-        public bool     handleWindowClose = true;                                                                               // Not saved, set by AppMode property & MainWindow UI, used in MainWindow.Closed() to determine Tray icon behavior 
+        public bool     handleWindowClose       = true;                                                                         // Not saved, set by AppMode property & MainWindow UI, used in MainWindow.Closed() to determine Tray icon behavior 
+        public bool     isBackgroundTaskRunning = false;
 
         public enum AppModeEnum
         {

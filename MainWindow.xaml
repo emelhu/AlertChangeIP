@@ -27,13 +27,13 @@
         <tb:TaskbarIcon x:Name="TrayIcon"
                         IconSource="/Assets/AppIcon.ico"
                         ToolTipText="Alert Change public IP"
-                        LeftClickCommand="{x:Bind ShowWindowCommand}" >
+                        LeftClickCommand="{x:Bind RestoreFromTrayCommand}" >
 
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="Megnyitás" Click="TrayIcon_OpenClick" />
+                    <MenuFlyoutItem Text="Megnyitás" Command="{x:Bind RestoreFromTrayCommand}" />
                     <MenuFlyoutSeparator />
-                    <MenuFlyoutItem Text="Kilépés" Click="TrayIcon_ExitClick" />
+                    <MenuFlyoutItem Text="Kilépés"   Command="{x:Bind ExitAppTrayCommand}" />
                 </MenuFlyout>
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>
@@ -50,12 +50,6 @@
             <TitleBar.IconSource>
                 <ImageIconSource ImageSource="Assets/AppIcon.ico" />
             </TitleBar.IconSource>
-
-            <TitleBar.Content>
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button Content="Close or Hide" Click="TitleBar_CloseOrHideClick" HorizontalAlignment="Right" />
-                </StackPanel>
-            </TitleBar.Content>
         </TitleBar>
 
         <NavigationView

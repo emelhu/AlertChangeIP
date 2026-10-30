@@ -32,7 +32,8 @@ namespace AlertChangeIP
             _appWindow = AppWindow.GetFromWindowId(windowId);
 
             this.Closed += OnClosed;
-            ShowWindowCommand = new RelayCommand(RestoreFromTray);                                                                                   // for tray icon click event, H.NotifyIcon extension will keep the application running in the background
+            RestoreFromTrayCommand = new RelayCommand(RestoreFromTray);                                                                         // for tray icon click event, H.NotifyIcon extension will keep the application running in the background
+            ExitAppTrayCommand     = new RelayCommand(ExitAppFromTray);                                                                                 // for tray icon click event, H.NotifyIcon extension will exit the application 
 
             WindowStateStorage.Restore(AppWindow);                                                                                              // Restore the window state when the window is opened   
         }
@@ -51,30 +52,28 @@ namespace AlertChangeIP
 
         #region Tray Icon
         private AppWindow       _appWindow;
-        public  IRelayCommand   ShowWindowCommand { get; }  
+        public  IRelayCommand   RestoreFromTrayCommand  { get; }
+        public  IRelayCommand   ExitAppTrayCommand      { get; }        
 
-        private void RestoreFromTray()
+        public void RestoreFromTray()
         {
             _appWindow.Show();
             this.Activate();
 
             TrayIcon.Visibility = Visibility.Collapsed;
+
+            AppParams.Instance.isBackgroundTaskRunning = false;                                                                                 // Stop the background task when the window is restored from the tray [HomePage.HideToTray() will stop]
         }
 
         public void HideToTray()
         {
             TrayIcon.ForceCreate();
             TrayIcon.Visibility = Visibility.Visible;
-            //this.Hide();                                                                                                                    // Hide the window instead of closing it; H.NotifyIcon extension will keep the application running in the background
+            //this.Hide();                                                                                                                      // Hide the window instead of closing it; H.NotifyIcon extension will keep the application running in the background
             _appWindow.Hide();
         }
 
-        private void TrayIcon_OpenClick(object sender, RoutedEventArgs e)
-        {
-            RestoreFromTray();
-        }
-
-        private void TrayIcon_ExitClick(object sender, RoutedEventArgs e)
+        private void ExitAppFromTray()
         {
             AppParams.Instance.handleWindowClose = false;
 
@@ -92,14 +91,7 @@ namespace AlertChangeIP
         private void TitleBar_BackRequested(TitleBar sender, object args)
         {
             NavFrame.GoBack();
-        }
-
-        private async void TitleBar_CloseOrHideClick(object sender, RoutedEventArgs e)                                                            // Added by eMeL
-        {
-            bool answer = await Helper.ShowDialogAsync(((FrameworkElement)this.Content), "Which action would you like to take? 'Close' or 'Hide' the window?", "'Close' or 'Hide' the window?", "Hide", "Close");
-
-            AppParams.Instance.handleWindowClose = answer;
-        }
+        }        
         #endregion
 
         #region Navigation 

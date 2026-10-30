@@ -98,7 +98,7 @@
             <Grid Padding="24,16,24,16" RowSpacing="24" Visibility="{x:Bind ViewModel.showLoop}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Alert if changed public IP; an infinite loop in background." />
@@ -108,17 +108,22 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="/Assets/worldwide-location-96.gif"
-                           Width="64" Height="64"
-                           HorizontalAlignment="Left"
-                           Grid.Column="0"/>
+                        <Image Grid.Column="0" Source="/Assets/worldwide-location-96.gif" Width="64" Height="64" HorizontalAlignment="Left" />
 
-                        <Image Source="/Assets/ip-address-96.png"
-                           Width="64" Height="64"
-                           HorizontalAlignment="Right"
-                           Grid.Column="1"/>
+                        <StackPanel Grid.Column="1"  Orientation="Horizontal">
+                            <Button x:Name="CloseButton" Click="CloseOrHideClick" HorizontalAlignment="Center" Width="48" Height="48" ToolTipService.ToolTip="'Close' this app now." >
+                                <Image Source="/Assets/ExitDoor.png"  Width="28" Height="28" />
+                            </Button>
+
+                            <Button x:Name="HideButton" Click="CloseOrHideClick" HorizontalAlignment="Center" Width="48" Height="48" ToolTipService.ToolTip="'Hide' this app now." >
+                                <Image Source="/Assets/HideApp.png"  Width="28" Height="28" />
+                            </Button>
+                        </StackPanel>
+
+                        <Image Grid.Column="2" Source="/Assets/ip-address-96.png" Width="64" Height="64" HorizontalAlignment="Right" />
                     </Grid>
 
                     <Border Background="Moccasin" 
@@ -127,7 +132,15 @@
                         Padding="12"
                         Margin="12">
 
-                        <TextBlock Text="{x:Bind ViewModel.loopText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                        <StackPanel Orientation="Vertical">
+                            <Button Command="{x:Bind ViewModel.DontHideSignalButtonClickCommand}" Background="Transparent" BorderThickness="0" Padding="2">
+                                <TextBlock Text="{x:Bind ViewModel.loopText}" Foreground="Black" TextWrapping="Wrap" HorizontalAlignment="Center" />
+                            </Button>
+
+                            <Button Command="{x:Bind ViewModel.DontHideSignalButtonClickCommand}" Background="Transparent" BorderThickness="0" Padding="2">
+                                <TextBlock Text="{x:Bind ViewModel.loopText2, Mode=TwoWay}" Foreground="DarkBlue" TextWrapping="Wrap" HorizontalAlignment="Center" />
+                            </Button>
+                        </StackPanel>
                     </Border>
                 </StackPanel>
             </Grid>
@@ -141,7 +154,7 @@
                     <RowDefinition Height="Auto" />                         <!-- 2 -->
                     <RowDefinition Height="Auto" />                         <!-- 3 -->
                     <RowDefinition Height="Auto" />                         <!-- 4 -->
-                    <RowDefinition Height="Auto" MaxHeight="300" />          <!-- 5 -->
+                    <RowDefinition Height="Auto" MaxHeight="300" />         <!-- 5 -->
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -167,7 +180,7 @@
 
                 <Button Grid.Row="0"    Grid.Column="2" Width="120" Command="{x:Bind ViewModel.CheckIPButtonClickCommand}">Check IP</Button>
 
-                <Border Grid.Row="1" Grid.Column="2" BorderBrush="Black" BorderThickness="2" Width="120" Background="{x:Bind ViewModel.changedTextBackground, Mode=TwoWay}">
+                <Border Grid.Row="1" Grid.Column="2" BorderBrush="Blue" BorderThickness="2" Width="auto" Background="{x:Bind ViewModel.changedTextBackground, Mode=TwoWay}">
                     <TextBlock Text="{x:Bind ViewModel.changedText, Mode=TwoWay}" HorizontalTextAlignment="Center" HorizontalAlignment="Center"
                         Foreground="{x:Bind ViewModel.changedTextForeground, Mode=TwoWay}" />
                 </Border>
